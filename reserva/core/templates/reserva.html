@@ -1,0 +1,41 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %} Registro Reserva {% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2 style="text-align: center;">Reserva de Transfer</h2>
+    <form method="POST" id="formReserva">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_pNomP">Primer Nombre</label>
+            {{ ticket_form.pNomP }}
+        </div>
+        <div class="form-group">
+            <label for="id_pApeP">Primer Apellido</label>
+            {{ ticket_form.pApeP }}
+        </div>
+        <div class="form-group">
+            <label for="id_rut">RUT</label>
+            {{ ticket_form.rut }}
+        </div>
+        <div class="form-group">
+            <label for="id_transfer">Transfer</label>
+            {{ detalle_form.transfer }}
+        </div>
+        <div class="form-group">
+            <label for="id_destino">Destino</label>
+            {{ detalle_form.destino }}
+        </div>
+        <div class="form-group">
+            <label for="id_asientosReserva">Cantidad Asientos</label>
+            {{ detalle_form.asientosReserva }}
+        </div>
+        <button type="submit" class="btn btn-primary">Reservar</button>
+    </form>
+</div>
+
+{% endblock %}

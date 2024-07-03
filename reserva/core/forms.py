@@ -2,9 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.forms import widgets
 from django.forms.widgets import Widget
-from .models import Categoria, Transfer, Chofer
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from .models import Categoria, Transfer, Chofer, DetalleTicket, Ticket
 
 class TransferForm(forms.ModelForm):
     class Meta:
@@ -131,4 +129,66 @@ class ChoferForm(forms.ModelForm):
                 }
             ),
         }
+
+class TicketForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['pNomP', 'pApeP', 'rut']
+        labels = {
+            'pNomP': 'Primer Nombre',
+            'pApeP': 'Primer Apellido',
+            'rut': 'RUT',
+        }
+        widgets = {
+            'pNomP': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ingrese su primer nombre',
+                    'id': 'pNomP'
+                }
+            ),
+            'pApeP': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ingrese su primer apellido',
+                    'id': 'pApeP'
+                }
+            ),
+            'rut': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ingrese su RUT',
+                    'id': 'rut'
+                }
+            ),
+        }
+
+class DetalleForm(forms.ModelForm):
+    class Meta:
+        model = DetalleTicket
+        fields = ['transfer', 'destino', 'asientosReserva']
+        labels = {
+            'transfer': 'Transfer',
+            'destino': 'Destino',
+            'asientosReserva': 'Cantidad de Asientos',
+        }
+        widgets = {
+            'transfer': forms.Select(attrs={'class': 'form-control', 'id': 'transfer'}),
+            'destino': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su destino', 'id': 'destino'}),
+            'asientosReserva': forms.NumberInput(attrs={'class': 'form-control', 'id': 'asientosReserva'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['transfer'].queryset = Transfer.objects.filter(disponible=True)
+
+        if 'transfer' in self.data:
+            try:
+                transfer_id = int(self.data.get('transfer'))
+                transfer = Transfer.objects.get(idVehiculo=transfer_id)
+                self.fields['asientosReserva'].widget.attrs['max'] = transfer.cantAsientos
+            except (ValueError, TypeError, Transfer.DoesNotExist):
+                pass
+        elif self.instance.pk:
+            self.fields['asientosReserva'].widget.attrs['max'] = self.instance.transfer.cantAsientos
 
