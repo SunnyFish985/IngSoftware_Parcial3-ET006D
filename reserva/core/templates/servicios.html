@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %} Creación Chofer {% endblock %}
+
+{% block content %}
+<main class="container">
+    <br>
+    <div style="display: flex; justify-content: space-between; align-items: center; background-color: aquamarine; border: 2px solid black; padding-left: 10px;">
+        <h2 style="margin-left: 10px;">Transfer</h2>
+        <a href="{% url 'crearT' %}" class="btn btn-primary" style="margin-right: 10px;">Crear Transfer</a>
+    </div> 
+    <div class="container-fluid my-5 py-3">
+        <div class="row">
+          {% for transfer in datos_transfer %}
+          <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+              <div class="card">
+                    <div style="height: 240px;">
+                        <img src="{{ transfer.imagen.url }}" class="card-img-top" alt="{{ transfer.patente }}" data-bs-toggle="collapse" href="#colapso{{ transfer.idVehiculo }}" aria-expanded="false" aria-controls="colapso{{ transfer.idVehiculo }}">
+                    </div>
+                        <div class="card-body">
+                          <h5 class="card-title">{{ transfer.patente }}</h5>
+                          <p class="card-text">ID Vehículo: {{ transfer.idVehiculo }}</p>
+                          <p class="card-text">Cantidad de Asientos: {{ transfer.cantAsientos }}</p>
+                          {% if transfer.disponible %}
+                              <p class="card-text">Estado: disponible</p>
+                          {% else %}
+                              <p class="card-text">Estado: no disponible</p>
+                          {% endif %}
+                          <p class="card-text">Categoría: {{ transfer.categoria }}</p>
+                          <p class="card-text">Chofer: {{ transfer.idChofer }}</p>
+                      </div>
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+    <br>
+    <div style="display: flex; justify-content: space-between; align-items: center; background-color: aquamarine; border: 2px solid black; padding-left: 10px;">
+        <h2 style="margin-left: 10px;">Choferes</h2>
+        <a href="{% url 'crearC' %}" class="btn btn-primary" style="margin-right: 10px;">Añadir Chofer</a>
+    </div>    
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id Chofer</th>
+                <th>RUT</th>
+                <th>Dígito Verificador</th>
+                <th>Primer Nombre</th>
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chofer in datos_cho %}
+                <tr>
+                    <td>{{ chofer.idChofer }}</td>
+                    <td>{{ chofer.rut }}</td>
+                    <td>{{ chofer.dv }}</td>
+                    <td>{{ chofer.pNom }}</td>
+                    <td>{{ chofer.sNom }}</td>
+                    <td>{{ chofer.pApe }}</td>
+                    <td>{{ chofer.sApe }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}

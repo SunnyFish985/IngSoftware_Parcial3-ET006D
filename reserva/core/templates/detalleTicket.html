@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %} Detalle Ticket{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Detalle del Ticket</h1>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <h5 class="card-title">ID: {{ ticket.idTicket }}</h5>
+                    <p class="card-text">Fecha de Reserva: {{ ticket.fechaReserva }}</p>
+                    <p class="card-text">Monto: ${{ ticket.precio }} CLP</p>
+                    {% if ticket.detalle_ticket.exists %}
+                        <p class="card-text">Transfer Elegido: {{ ticket.detalle_ticket.first.transfer.patente }}</p>
+                        <p class="card-text">Cantidad de asientos reservados: {{ ticket.detalle_ticket.first.asientosReserva }}</p>
+                    {% else %}
+                        <p class="card-text">No hay detalles de ticket asociados.</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <img src="{% static 'img/qr.png' %}" alt="" style="height: 250px; float: right;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
